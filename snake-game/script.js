@@ -127,15 +127,11 @@ function teleport(snake) {
 
 function eat(snake, apple1, apple2) {
     if (snake.head.x == apple1.position.x && snake.head.y == apple1.position.y) {
-        let msk1 = document.getElementById("eatApple");
-        msk1.play();
         apple1.position = initPosition();
         snake.score++;
         snake.body.push({x: snake.head.x, y: snake.head.y});
     }
     else if (snake.head.x == apple2.position.x && snake.head.y == apple2.position.y) {
-        let msk2 = document.getElementById("eatApple");
-        msk2.play();
         apple2.position = initPosition();
         snake.score++;
         snake.body.push({x: snake.head.x, y: snake.head.y});
