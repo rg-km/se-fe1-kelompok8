@@ -174,6 +174,8 @@ function checkCollision(snakes) {
         }
     }
     if (isCollide) {
+        let msk = document.getElementById("gameOver");
+        msk.play();
         alert("Game over");
         snake1 = initSnake("purple");
         snake2 = initSnake("blue");
