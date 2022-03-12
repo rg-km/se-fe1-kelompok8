@@ -42,8 +42,12 @@ function initSnake(color) {
 let snake1 = initSnake("purple");
 let snake2 = initSnake("blue");
 
-let apple = {
-    color: "red",
+//menambah image apple
+let apple1 = {
+    position: initPosition(),
+}
+
+let apple2 = {
     position: initPosition(),
 }
 
@@ -82,7 +86,23 @@ function draw() {
         for (let i = 1; i < snake2.body.length; i++) {
             drawCell(ctx, snake2.body[i].x, snake2.body[i].y, snake2.color);
         }
-        drawCell(ctx, apple.position.x, apple.position.y, apple.color);
+        //mengambil image dengan id pada index.html
+        let img=document.getElementById("appleImg");
+        ctx.drawImage(
+            img,
+            apple1.position.x*CELL_SIZE,
+            apple1.position.y*CELL_SIZE,
+            CELL_SIZE,
+            CELL_SIZE,
+        );
+
+        ctx.drawImage(
+            img,
+            apple2.position.x*CELL_SIZE,
+            apple2.position.y*CELL_SIZE,
+            CELL_SIZE,
+            CELL_SIZE,
+        );
 
         drawScore(snake1);
         drawScore(snake2);
@@ -104,9 +124,14 @@ function teleport(snake) {
     }
 }
 
-function eat(snake, apple) {
-    if (snake.head.x == apple.position.x && snake.head.y == apple.position.y) {
-        apple.position = initPosition();
+function eat(snake, apple1, apple2) {
+    if (snake.head.x == apple1.position.x && snake.head.y == apple1.position.y) {
+        apple1.position = initPosition();
+        snake.score++;
+        snake.body.push({x: snake.head.x, y: snake.head.y});
+    }
+    else if (snake.head.x == apple2.position.x && snake.head.y == apple2.position.y) {
+        apple2.position = initPosition();
         snake.score++;
         snake.body.push({x: snake.head.x, y: snake.head.y});
     }
@@ -115,25 +140,25 @@ function eat(snake, apple) {
 function moveLeft(snake) {
     snake.head.x--;
     teleport(snake);
-    eat(snake, apple);
+    eat(snake, apple1, apple2);
 }
 
 function moveRight(snake) {
     snake.head.x++;
     teleport(snake);
-    eat(snake, apple);
+    eat(snake, apple1, apple2);
 }
 
 function moveDown(snake) {
     snake.head.y++;
     teleport(snake);
-    eat(snake, apple);
+    eat(snake, apple1, apple2);
 }
 
 function moveUp(snake) {
     snake.head.y--;
     teleport(snake);
-    eat(snake, apple);
+    eat(snake, apple1, apple2);
 }
 
 function checkCollision(snakes) {
