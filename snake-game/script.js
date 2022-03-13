@@ -280,8 +280,10 @@ function checkCollision(snakes) {
         if(life.length === 0){
             let msk1 = document.getElementById("gameOver");
             msk1.play();
-            alert("Game over");
-            location.reload();
+            setTimeout(() => {
+                alert("Game Over")
+                location.reload()
+              }, 150)
             MOVE_INTERVAL = 150;
             snake1 = initSnake("purple");
         }
