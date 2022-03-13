@@ -64,6 +64,8 @@ var life = [
 let lifes = {
     color: "green",
     position: initPosition(),
+    visible: true,
+    visibleCount: 0,
 }
 
 let snake1 = initSnake("");
@@ -108,16 +110,28 @@ function isPrime(number) {
     return (divider == 2) ? true : false
 }
 
-function drawLife(ctx, lifes) {
+function drawLife(ctx) {
+    if(lifes.visible){
+        let img = document.getElementById("nyawa");
+            ctx.drawImage(
+                img,
+                lifes.position.x * CELL_SIZE,
+                lifes.position.y * CELL_SIZE,
+                CELL_SIZE,
+                CELL_SIZE
+            );
+            lifes.visibleCount++;
+            if(lifes.visibleCount==10){
+                lifes.visible=false;
+            }
 
-    let img = document.getElementById("nyawa");
-        ctx.drawImage(
-            img,
-            lifes.position.x * CELL_SIZE,
-            lifes.position.y * CELL_SIZE,
-            CELL_SIZE,
-            CELL_SIZE
-        );
+    }else {
+        drawCell(ctx, lifes.position.x, lifes.position.y, "rgb(255,255,255,0)")
+        lifes.visibleCount--;
+        if (lifes.visibleCount == 0) {
+            lifes.visible = true;
+        }
+    }
 }
 
 function drawSnake(ctx, snake) {
@@ -162,7 +176,7 @@ function draw() {
         );
 
         if (isPrime(snake1.score)) {
-            drawLife(ctx, lifes);
+            drawLife(ctx);
         }
         document.getElementById("level").innerHTML = "Level: " + snake1.level;
 
