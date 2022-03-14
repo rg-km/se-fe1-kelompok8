@@ -12,6 +12,45 @@ const DIRECTION = {
 
 var MOVE_INTERVAL = 200;
 
+//array wall
+var wallX = [];
+var wallY = [];
+
+//array wall for level
+var wall2 = [
+    {
+        x1: 5,
+        x2: 20,
+        y: 5,
+    }
+];
+var wall3 = [
+    {
+        x1: 5,
+        x2: 20,
+        y: 10,
+    }
+];
+var wall4 = [
+    {
+        x1: 5,
+        x2: 20,
+        y: 15,
+    }
+];
+var wall5 = [
+    {
+        x: 5,
+        y1: 5,
+        y2: 20,
+    },
+    {
+        x: 19,
+        y1: 7,
+        y2: 20,
+    }
+];
+
 function initPosition() {
     return {
         x: Math.floor(Math.random() * WIDTH),
@@ -134,6 +173,59 @@ function drawLife(ctx) {
     }
 }
 
+//function initWall display on level 2
+function initWall2() {
+    for (let i = 0; i < wall2.length; i++){
+        for (let j = wall2[i].x1; j <= wall2[i].x2; j++) {
+            wallX.push(j);
+            wallY.push(wall2[i].y);
+        }
+    }
+}
+
+//function initWall display on level 3
+function initWall3() {
+    for (let i = 0; i < wall3.length; i++){
+        for (let j = wall3[i].x1; j <= wall3[i].x2; j++) {
+            wallX.push(j);
+            wallY.push(wall3[i].y);
+        }
+    }
+}
+
+//function initWall display on level 4
+function initWall4() {
+    for (let i = 0; i < wall4.length; i++){
+        for (let j = wall4[i].x1; j <= wall4[i].x2; j++) {
+            wallX.push(j);
+            wallY.push(wall4[i].y);
+        }
+    }
+}
+
+//function initWall display on level 5
+function initWall5() {
+    for (let i = 0; i < wall5.length; i++){
+        for (let j = wall5[i].y1; j <= wall5[i].y2; j++) {
+            wallY.push(j);
+            wallX.push(wall5[i].x);
+        }
+    }
+}
+
+//draw the Wall
+function createWall() {
+    let wallCanvas = document.getElementById("snakeBoard");
+    let ctx = wallCanvas.getContext("2d");
+    imgTrap = new Image();
+    var i = 0;
+    while(i < wallX.length){
+        imgTrap.src = 'assets/bush2.png';
+        ctx.drawImage(imgTrap, wallX[i] * CELL_SIZE, wallY[i] * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        i++;
+    }
+}
+
 function drawSnake(ctx, snake) {
     ctx.fillStyle = "yellow";
     let img = document.getElementById("head");
@@ -178,6 +270,9 @@ function draw() {
         if (isPrime(snake1.score)) {
             drawLife(ctx);
         }
+
+        createWall();
+
         document.getElementById("level").innerHTML = "Level: " + snake1.level;
 
         document.getElementById("score").innerHTML = "Score";
@@ -240,12 +335,24 @@ function eat(snake, apple, apple1) {
         snake.lifes = 0;
     }
 
+    //snake level
     while (snake.scoreReset === 5) {
         if (snake.level <= 4) {
+            if (snake.level == 0) {
+                initWall2();
+            } else if (snake.level == 1) {
+                initWall3();
+            } else if (snake.level == 2) {
+                initWall4();
+            } else if (snake.level == 3) {
+                wallX = [];
+                wallY = [];
+                initWall5();
+            }
             snake.level++;
             MOVE_INTERVAL -= 20;
             alert("Level Up" + snake.level);
-            let msk = document.getElementById("levelUp");
+            var msk = document.getElementById("levelUp");
             msk.play();
         }
         snake.scoreReset = 0;
@@ -290,6 +397,48 @@ function checkCollision(snakes) {
             }
         }
     }
+
+    //check collision wall and snake
+    for (let i = 0; i < wallX.length; i++) {
+        if (snake1.head.x === wallX[i] && (snake1.direction == 2 || snake1.direction == 3)) {
+            if (snake1.head.y === wallY[i] || snake1.head.y === wallY[i]) {
+                life.length--;
+                sum -= 20;
+                if(life.length == 0){
+                    isCollide = true;
+                }
+            }
+        }
+        if (snake1.head.y === wallY[i] && (snake1.direction == 0 || snake1.direction == 1)) {
+            if (snake1.head.x === wallX[i] || snake1.head.x === wallX[i]) {
+                life.length--;
+                sum -= 20;
+                if(life.length == 0){
+                    isCollide = true;
+                }
+            }
+        }
+    } 
+
+    //code for check apple and health so it doesn't appear in the obstacle
+    for (let i = 0; i < wallX.length; i++) {
+        if (apple.position.x === wallX[i]) {
+            if (apple.position.y === wallY[i] || apple.position.y === wallY[i]) {
+                apple.position = initPosition();
+            }
+        }
+        if (apple1.position.y === wallY[i]) {
+            if (apple1.position.x === wallX[i] || apple1.position.x === wallX[i]) {
+                apple1.position = initPosition();
+            }
+        }
+        if (lifes.position.y === wallY[i]) {
+            if (lifes.position.x === wallX[i] || lifes.position.x === wallX[i]) {
+                lifes.position = initPosition();
+            }
+        }
+    }
+
     if (isCollide) {
         if(life.length === 0){
             let msk1 = document.getElementById("gameOver");
