@@ -519,5 +519,4 @@ document.addEventListener("keydown", function (event) {
 function initGame() {
     move(snake1);
 }
-
 initGame();
